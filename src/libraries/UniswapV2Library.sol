@@ -6,10 +6,10 @@ import "./SafeMath.sol";
 
 library UniswapV2Library {
     using SafeMath for uint256;
-    // Matches local UniswapV2Pair creation code hash
+    // Matches local UniswapV2Pair creation code hash (new founry version changes bytecode from c23bf19db6ac4defdd92296ea45964e6a853c400a83c330d8396fcb4132d2e6a to e38d88669509bf0ee011fd2fe97ec25f62afe21ba4eae5825e631b1c5cca1348 )
 
     bytes32 internal constant INIT_CODE_PAIR_HASH =
-        hex"c23bf19db6ac4defdd92296ea45964e6a853c400a83c330d8396fcb4132d2e6a";
+        hex"e38d88669509bf0ee011fd2fe97ec25f62afe21ba4eae5825e631b1c5cca1348";
 
     // returns sorted token addresses, used to handle return values from pairs sorted in this order
     function sortTokens(address tokenA, address tokenB) internal pure returns (address token0, address token1) {
