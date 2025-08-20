@@ -14,7 +14,7 @@ contract ExampleFlashSwap is IUniswapV2Callee {
     address immutable factory;
     IWETH immutable WETH;
 
-    constructor(address _factory, address _factoryV1, address router) public {
+    constructor(address _factory, address _factoryV1, address router) {
         factoryV1 = IUniswapV1Factory(_factoryV1);
         factory = _factory;
         WETH = IWETH(IUniswapV2Router01(router).WETH());
@@ -47,7 +47,7 @@ contract ExampleFlashSwap is IUniswapV2Callee {
         if (amountToken > 0) {
             (uint minETH) = abi.decode(data, (uint)); // slippage parameter for V1, passed in by caller
             token.approve(address(exchangeV1), amountToken);
-            uint amountReceived = exchangeV1.tokenToEthSwapInput(amountToken, minETH, uint(-1));
+            uint amountReceived = exchangeV1.tokenToEthSwapInput(amountToken, minETH, type(uint).max);
             uint amountRequired = UniswapV2Library.getAmountsIn(factory, amountToken, path)[0];
             assert(amountReceived > amountRequired); // fail if we didn't get enough ETH back to repay our flash loan
             WETH.deposit{value: amountRequired}();
@@ -57,7 +57,7 @@ contract ExampleFlashSwap is IUniswapV2Callee {
         } else {
             (uint minTokens) = abi.decode(data, (uint)); // slippage parameter for V1, passed in by caller
             WETH.withdraw(amountETH);
-            uint amountReceived = exchangeV1.ethToTokenSwapInput{value: amountETH}(minTokens, uint(-1));
+            uint amountReceived = exchangeV1.ethToTokenSwapInput{value: amountETH}(minTokens, type(uint).max);
             uint amountRequired = UniswapV2Library.getAmountsIn(factory, amountETH, path)[0];
             assert(amountReceived > amountRequired); // fail if we didn't get enough tokens back to repay our flash loan
             assert(token.transfer(msg.sender, amountRequired)); // return tokens to V2 pair

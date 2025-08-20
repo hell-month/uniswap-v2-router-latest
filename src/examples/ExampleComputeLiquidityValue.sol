@@ -7,7 +7,7 @@ contract ExampleComputeLiquidityValue {
 
     address public immutable factory;
 
-    constructor(address factory_) public {
+    constructor(address factory_) {
         factory = factory_;
     }
 

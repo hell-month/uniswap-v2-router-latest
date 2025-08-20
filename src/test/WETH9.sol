@@ -38,7 +38,8 @@ contract WETH9 {
     function withdraw(uint wad) public {
         require(balanceOf[msg.sender] >= wad, "");
         balanceOf[msg.sender] -= wad;
-        msg.sender.transfer(wad);
+        (bool s, ) = payable(msg.sender).call{value: wad}("");
+        require(s, "ETH_TRANSFER_FAILED");
         emit Withdrawal(msg.sender, wad);
     }
 
@@ -62,7 +63,7 @@ contract WETH9 {
     {
         require(balanceOf[src] >= wad, "");
 
-        if (src != msg.sender && allowance[src][msg.sender] != uint(-1)) {
+        if (src != msg.sender && allowance[src][msg.sender] != type(uint).max) {
             require(allowance[src][msg.sender] >= wad, "");
             allowance[src][msg.sender] -= wad;
         }
