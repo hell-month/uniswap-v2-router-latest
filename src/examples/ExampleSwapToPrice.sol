@@ -1,4 +1,4 @@
-pragma solidity =0.6.6;
+pragma solidity ^0.8.30;
 
 import 'uniswap-v2-core-latest/src/interfaces/IUniswapV2Pair.sol';
 import '../libraries/Babylonian.sol';
