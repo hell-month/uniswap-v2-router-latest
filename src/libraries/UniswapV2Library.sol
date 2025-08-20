@@ -1,14 +1,13 @@
 pragma solidity ^0.8.30;
 
 import 'uniswap-v2-core-latest/src/interfaces/IUniswapV2Pair.sol';
-import 'uniswap-v2-core-latest/src/UniswapV2Pair.sol';
 
 import "./SafeMath.sol";
 
 library UniswapV2Library {
     using SafeMath for uint;
-
-    bytes32 internal constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(UniswapV2Pair).creationCode));
+    // Matches local UniswapV2Pair creation code hash
+    bytes32 internal constant INIT_CODE_PAIR_HASH = hex"c23bf19db6ac4defdd92296ea45964e6a853c400a83c330d8396fcb4132d2e6a";
 
     // returns sorted token addresses, used to handle return values from pairs sorted in this order
     function sortTokens(address tokenA, address tokenB) internal pure returns (address token0, address token1) {

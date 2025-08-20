@@ -4,17 +4,17 @@ pragma solidity ^0.8.30;
 import "forge-std/Test.sol";
 
 import {UniswapV2Router02} from "src/UniswapV2Router02.sol";
-import {IUniswapV2Factory} from "uniswap-v2-core-latest/src/interfaces/IUniswapV2Factory.sol";
-import {UniswapV2Factory} from "uniswap-v2-core-latest/src/UniswapV2Factory.sol";
-import {IUniswapV2Pair} from "uniswap-v2-core-latest/src/interfaces/IUniswapV2Pair.sol";
+import {UniswapV2Factory} from "lib/uniswap-v2-core-latest/src/UniswapV2Factory.sol";
+import {IUniswapV2Pair} from "lib/uniswap-v2-core-latest/src/interfaces/IUniswapV2Pair.sol";
 
 import {ERC20 as TestERC20} from "src/test/ERC20.sol";
 import {DeflatingERC20} from "src/test/DeflatingERC20.sol";
 import {WETH9} from "src/test/WETH9.sol";
+import {Fixtures} from "test/shared/Fixtures.t.sol";
 
-contract UniswapV2Router02Test is Test {
+contract UniswapV2Router02Test is Test, Fixtures {
     UniswapV2Router02 internal router;
-    IUniswapV2Factory internal factory;
+    UniswapV2Factory internal factory;
     WETH9 internal weth;
     TestERC20 internal token0;
     TestERC20 internal token1;
@@ -24,13 +24,13 @@ contract UniswapV2Router02Test is Test {
     function setUp() public {
         self = address(this);
         weth = new WETH9();
-        factory = IUniswapV2Factory(address(new UniswapV2Factory(self)));
+        factory = new UniswapV2Factory(self);
         router = new UniswapV2Router02(address(factory), address(weth));
 
-        token0 = new TestERC20(1_000_000 ether);
-        token1 = new TestERC20(1_000_000 ether);
+        Fixtures.PairFixture memory fx = pairFixture(self);
+        token0 = fx.token0;
+        token1 = fx.token1;
 
-        // approve router to move tokens
         token0.approve(address(router), type(uint256).max);
         token1.approve(address(router), type(uint256).max);
     }
@@ -38,7 +38,6 @@ contract UniswapV2Router02Test is Test {
     function test_quote() public {
         assertEq(router.quote(1, 100, 200), 2);
         assertEq(router.quote(2, 200, 100), 1);
-
         vm.expectRevert(bytes("UniswapV2Library: INSUFFICIENT_AMOUNT"));
         router.quote(0, 100, 200);
         vm.expectRevert(bytes("UniswapV2Library: INSUFFICIENT_LIQUIDITY"));
@@ -115,7 +114,7 @@ contract UniswapV2Router02Test is Test {
     }
 }
 
-contract FeeOnTransferTokensTest is Test {
+contract FeeOnTransferTokensTest is Test, Fixtures {
     UniswapV2Router02 internal router;
     UniswapV2Factory internal factory;
     WETH9 internal weth;
@@ -167,7 +166,6 @@ contract FeeOnTransferTokensTest is Test {
             type(uint256).max
         );
 
-        // no assertion on exact amounts; just ensure no revert and we received some ETH
         assertGt(self.balance, 0);
     }
 
@@ -190,7 +188,6 @@ contract FeeOnTransferTokensTest is Test {
             self,
             type(uint256).max
         );
-        // ensure we received some WETH
         assertGt(weth.balanceOf(self), 0);
     }
 
