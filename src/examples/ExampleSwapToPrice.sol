@@ -1,14 +1,14 @@
 pragma solidity ^0.8.30;
 
-import 'uniswap-v2-core-latest/src/interfaces/IUniswapV2Pair.sol';
-import '../libraries/Babylonian.sol';
-import '../libraries/TransferHelper.sol';
+import "uniswap-v2-core-latest/src/interfaces/IUniswapV2Pair.sol";
+import "../libraries/Babylonian.sol";
+import "../libraries/TransferHelper.sol";
 
-import '../libraries/UniswapV2LiquidityMathLibrary.sol';
-import '../interfaces/IERC20.sol';
-import '../interfaces/IUniswapV2Router01.sol';
-import '../libraries/SafeMath.sol';
-import '../libraries/UniswapV2Library.sol';
+import "../libraries/UniswapV2LiquidityMathLibrary.sol";
+import "../interfaces/IERC20.sol";
+import "../interfaces/IUniswapV2Router01.sol";
+import "../libraries/SafeMath.sol";
+import "../libraries/UniswapV2Library.sol";
 
 contract ExampleSwapToPrice {
     using SafeMath for uint256;
@@ -44,12 +44,11 @@ contract ExampleSwapToPrice {
         {
             (uint256 reserveA, uint256 reserveB) = UniswapV2Library.getReserves(factory, tokenA, tokenB);
             (aToB, amountIn) = UniswapV2LiquidityMathLibrary.computeProfitMaximizingTrade(
-                truePriceTokenA, truePriceTokenB,
-                reserveA, reserveB
+                truePriceTokenA, truePriceTokenB, reserveA, reserveB
             );
         }
 
-        require(amountIn > 0, 'ExampleSwapToPrice: ZERO_AMOUNT_IN');
+        require(amountIn > 0, "ExampleSwapToPrice: ZERO_AMOUNT_IN");
 
         // spend up to the allowance of the token in
         uint256 maxSpend = aToB ? maxSpendTokenA : maxSpendTokenB;

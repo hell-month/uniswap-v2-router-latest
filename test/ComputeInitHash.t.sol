@@ -12,5 +12,3 @@ contract ComputeInitHash is Test {
         assertTrue(h != bytes32(0));
     }
 }
-
-

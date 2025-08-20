@@ -1,6 +1,6 @@
 pragma solidity ^0.8.30;
 
-import '../libraries/UniswapV2LiquidityMathLibrary.sol';
+import "../libraries/UniswapV2LiquidityMathLibrary.sol";
 
 contract ExampleComputeLiquidityValue {
     using SafeMath for uint256;
@@ -12,36 +12,23 @@ contract ExampleComputeLiquidityValue {
     }
 
     // see UniswapV2LiquidityMathLibrary#getReservesAfterArbitrage
-    function getReservesAfterArbitrage(
-        address tokenA,
-        address tokenB,
-        uint256 truePriceTokenA,
-        uint256 truePriceTokenB
-    ) external view returns (uint256 reserveA, uint256 reserveB) {
+    function getReservesAfterArbitrage(address tokenA, address tokenB, uint256 truePriceTokenA, uint256 truePriceTokenB)
+        external
+        view
+        returns (uint256 reserveA, uint256 reserveB)
+    {
         return UniswapV2LiquidityMathLibrary.getReservesAfterArbitrage(
-            factory,
-            tokenA,
-            tokenB,
-            truePriceTokenA,
-            truePriceTokenB
+            factory, tokenA, tokenB, truePriceTokenA, truePriceTokenB
         );
     }
 
     // see UniswapV2LiquidityMathLibrary#getLiquidityValue
-    function getLiquidityValue(
-        address tokenA,
-        address tokenB,
-        uint256 liquidityAmount
-    ) external view returns (
-        uint256 tokenAAmount,
-        uint256 tokenBAmount
-    ) {
-        return UniswapV2LiquidityMathLibrary.getLiquidityValue(
-            factory,
-            tokenA,
-            tokenB,
-            liquidityAmount
-        );
+    function getLiquidityValue(address tokenA, address tokenB, uint256 liquidityAmount)
+        external
+        view
+        returns (uint256 tokenAAmount, uint256 tokenBAmount)
+    {
+        return UniswapV2LiquidityMathLibrary.getLiquidityValue(factory, tokenA, tokenB, liquidityAmount);
     }
 
     // see UniswapV2LiquidityMathLibrary#getLiquidityValueAfterArbitrageToPrice
@@ -51,17 +38,9 @@ contract ExampleComputeLiquidityValue {
         uint256 truePriceTokenA,
         uint256 truePriceTokenB,
         uint256 liquidityAmount
-    ) external view returns (
-        uint256 tokenAAmount,
-        uint256 tokenBAmount
-    ) {
+    ) external view returns (uint256 tokenAAmount, uint256 tokenBAmount) {
         return UniswapV2LiquidityMathLibrary.getLiquidityValueAfterArbitrageToPrice(
-            factory,
-            tokenA,
-            tokenB,
-            truePriceTokenA,
-            truePriceTokenB,
-            liquidityAmount
+            factory, tokenA, tokenB, truePriceTokenA, truePriceTokenB, liquidityAmount
         );
     }
 
@@ -72,19 +51,12 @@ contract ExampleComputeLiquidityValue {
         uint256 truePriceTokenA,
         uint256 truePriceTokenB,
         uint256 liquidityAmount
-    ) external view returns (
-        uint256
-    ) {
-        uint gasBefore = gasleft();
+    ) external view returns (uint256) {
+        uint256 gasBefore = gasleft();
         UniswapV2LiquidityMathLibrary.getLiquidityValueAfterArbitrageToPrice(
-            factory,
-            tokenA,
-            tokenB,
-            truePriceTokenA,
-            truePriceTokenB,
-            liquidityAmount
+            factory, tokenA, tokenB, truePriceTokenA, truePriceTokenB, liquidityAmount
         );
-        uint gasAfter = gasleft();
+        uint256 gasAfter = gasleft();
         return gasBefore - gasAfter;
     }
 }
