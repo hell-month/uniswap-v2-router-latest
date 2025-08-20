@@ -163,42 +163,6 @@ contract FeeOnTransferTokensTest is Test, Fixtures {
         assertGt(self.balance, 0);
     }
 
-    function test_removeLiquidityETHWithPermitSupportingFeeOnTransferTokens() public {
-        uint256 ownerPk = 0xBEEF;
-        address owner = vm.addr(ownerPk);
-
-        // fund owner
-        vm.deal(owner, 100 ether);
-
-        vm.prank(owner);
-        DeflatingERC20 localDtt = new DeflatingERC20(10_000 ether);
-
-        factory.createPair(address(localDtt), address(weth));
-        address p = factory.getPair(address(localDtt), address(weth));
-        UniswapV2Pair localPair = UniswapV2Pair(p);
-
-        vm.startPrank(owner);
-        localDtt.approve(address(router), type(uint256).max);
-        router.addLiquidityETH{value: 4 ether}(
-            address(localDtt),
-            (1 ether * 100) / uint256(99),
-            (1 ether * 100) / uint256(99),
-            4 ether,
-            owner,
-            type(uint256).max
-        );
-        uint256 liquidity = localPair.balanceOf(owner);
-        uint256 deadline = type(uint256).max;
-        (uint8 v, bytes32 r, bytes32 s) = _pairPermitSig(localPair, owner, ownerPk, liquidity, deadline);
-
-        router.removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(
-            address(localDtt), liquidity, 0, 0, owner, deadline, false, v, r, s
-        );
-        vm.stopPrank();
-
-        assertGt(owner.balance, 0);
-    }
-
     function test_swapExactTokensForTokensSupportingFeeOnTransferTokens_DTT_to_WETH() public {
         uint256 dttAmount = 5 ether;
         uint256 ethAmount = 10 ether;
