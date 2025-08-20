@@ -1,3 +1,6 @@
 [submodule "lib/forge-std"]
 	path = lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "lib/uniswap-v2-core-latest"]
+	path = lib/uniswap-v2-core-latest
+	url = https://github.com/hell-month/uniswap-v2-core-latest
